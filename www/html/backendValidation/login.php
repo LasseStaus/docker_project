@@ -2,7 +2,7 @@
 
 // ################### csrf valid ###############################
 
-if (is_csrf_valid() != true) {
+if (!is_csrf_valid() == true) {
     header("Location: /404");
     exit();
 }
@@ -31,7 +31,7 @@ if (!filter_var($_POST['user_email'], FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 if (
-    strlen($_POST['user_password']) < 4 ||
+    strlen($_POST['user_password']) < 8 ||
     strlen($_POST['user_password']) > 50
 ) {
     $error_message = "Password must be between 8 and 50 characters";

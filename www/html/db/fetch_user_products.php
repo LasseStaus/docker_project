@@ -3,16 +3,16 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
-if (!isset($_SESSION['user_uuid'])) {
+if (!isset($_SESSION['admin_user_uuid'])) {
     header('Location: /admin-login');
     exit();
 }
-try {
 
+try {
     require_once($_SERVER['DOCUMENT_ROOT'] . '/db/db.php');
-    $q = $db->prepare('SELECT * FROM users');
+    $q = $db->prepare("SELECT * FROM products WHERE user_uuid = '$user_id'");
     $q->execute();
-    $users = $q->fetchAll();
+    $products = $q->fetchAll();
 } catch (PDOException $ex) {
     echo $ex;
 }
