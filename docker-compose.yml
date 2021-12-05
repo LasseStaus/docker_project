@@ -23,7 +23,7 @@ services:
     container_name: app-container
       # links:
       #  - db
-      # volumes:
+      #volumes:
       #   - ./www/html/:/app
         # depends_on:
         # - db
