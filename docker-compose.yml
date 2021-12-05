@@ -1,0 +1,73 @@
+version: '3.7'
+
+services:
+
+  nginx:
+    # build: ./nginx/
+    image: nginx:1.11.10-alpine
+    container_name: nginx-container
+    ports:
+      - 8000:80
+        #  depends_on:
+      #  - app
+        # networks:
+      # - webnet
+        #   - dbnet
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./www/html:/app
+
+  app:
+    build: .
+      #image: php:7.0-fpm
+    container_name: app-container
+      # links:
+      #  - db
+      # volumes:
+      #   - ./www/html/:/app
+        # depends_on:
+        # - db
+        #  - phpmyadmin
+        # networks:
+        # - webnet
+        # - dbnet
+
+  db:
+    image: mysql:5.7
+    container_name: db-container
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=MYSQL_DATABASE
+      - MYSQL_USER=MYSQL_USER
+      - MYSQL_PASSWORD=MYSQL_PASSWORD
+        # networks:
+      #  - dbnet
+      #  - webnet
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+        #  links:
+      #   - db
+      # environment:
+      # PMA_HOST: henrik
+        #  depends_on:
+        #  - db
+        #   networks:
+      #  - dbnet
+      #  - webnet
+
+volumes:
+  db-data:
+
+    #networks:
+    # dbnet:
+    # driver: bridge
+    # webnet:
+    # driver: bridge
+
