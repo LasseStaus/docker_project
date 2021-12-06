@@ -3,34 +3,28 @@ version: '3.7'
 services:
 
   nginx:
-    # build: ./nginx/
     image: nginx:1.11.10-alpine
     container_name: nginx-container
     ports:
       - 8000:80
-        #  depends_on:
-      #  - app
-        # networks:
-      # - webnet
-        #   - dbnet
+    depends_on:
+      - app
+    networks:
+      - webnet
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./www/html:/app
 
   app:
     build: .
-      #image: php:7.0-fpm
-    container_name: app-container
-      # links:
-      #  - db
-      #volumes:
-      #   - ./www/html/:/app
-        # depends_on:
-        # - db
-        #  - phpmyadmin
-        # networks:
-        # - webnet
-        # - dbnet
+    depends_on:
+      - db
+    networks:
+      - webnet
+      - dbnet
+    volumes:
+      - product-img-data:/app/product-images
+      - profile-img-data:/app/profile-uploads
 
   db:
     image: mysql:5.7
@@ -40,36 +34,25 @@ services:
       - db-data:/var/lib/mysql
     env_file:
       - .env
-        #  environment:
-        # - MYSQL_ROOT_PASSWORD=MYSQL_ROOT_PASSWORD
-        # - MYSQL_DATABASE=MYSQL_DATABASE
-        # - MYSQL_USER=MYSQL_USER
-        # - MYSQL_PASSWORD=MYSQL_PASSWORD
-        # networks:
-      #  - dbnet
-      #  - webnet
+    networks:
+      - dbnet
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
       - "8080:80"
-        #  links:
-      #   - db
-      # environment:
-      # PMA_HOST: henrik
-        #  depends_on:
-        #  - db
-        #   networks:
-      #  - dbnet
-      #  - webnet
+    networks:
+      - dbnet
 
 volumes:
   db-data:
+  product-img-data:
+  profile-img-data:
 
-    #networks:
-    # dbnet:
-    # driver: bridge
-    # webnet:
-    # driver: bridge
+networks:
+  dbnet:
+    driver: bridge
+  webnet:
+    driver: bridge
 

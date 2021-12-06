@@ -7,6 +7,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/backendValidation/createProduct.php')
 
 $valid_extensions = ['png', 'jpg', 'jpeg', 'gif', 'zip', 'pdf', 'jfif'];
 $images = [];
+
+
 foreach ($_FILES['file-to-upload']['tmp_name'] as $file) {
     $image_type = mime_content_type($file);
     $extension = strrchr($image_type, '/');
@@ -19,6 +21,7 @@ foreach ($_FILES['file-to-upload']['tmp_name'] as $file) {
     array_push($images, $random_image_name);
     move_uploaded_file($file, "product-images/$random_image_name");
 };
+
 
 $images = json_encode($images);
 
@@ -47,6 +50,9 @@ try {
     $q->bindValue(':product_status',  1);
 
     $q->execute();
+
+
+
     if (!$q->rowCount()) {
         echo 'vi er her', $_SESSION['user_uuid'];
 
